@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f6f3eb">
+    <title>Élevage de volkornes</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="data.js" defer></script>
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="../types.html">Élevage Dofus <small>GESTION</small></a>
+      <label class="target-control">Génération visée
+        <select id="target-generation" aria-label="Génération visée"></select>
+      </label>
+      <label class="type-control">Type de monture
+        <select id="mount-type" aria-label="Type de monture">
+          <option value="volkorne" selected>Volkornes</option>
+          <option value="dragodinde">Dragodindes</option>
+        </select>
+      </label>
+      <span id="save-status" role="status">Enregistré</span>
+    </header>
+
+    <main class="page-shell">
+      <section class="page-heading">
+        <div>
+          <p class="eyebrow">Élevage · Volkornes</p>
+          <h1>Tableau de bord</h1>
+          <p>Stock, couleurs et étapes de croisement.</p>
+        </div>
+      </section>
+
+      <section class="overview-grid" aria-label="Résumé de l’élevage">
+        <article class="card capacity-card">
+          <div class="capacity-ring" id="capacity-ring" role="img" aria-label="0 % de capacité utilisée">
+            <span id="capacity-percent">0 %</span>
+          </div>
+          <div><strong class="metric" id="mount-count">0 / 500</strong><span class="secondary">Montures en réserve</span></div>
+        </article>
+        <article class="card metric-card"><span class="secondary">Femelles</span><strong class="metric" id="female-count">0</strong></article>
+        <article class="card metric-card"><span class="secondary">Mâles</span><strong class="metric" id="male-count">0</strong></article>
+        <article class="card metric-card"><span class="secondary">Fécondes</span><strong class="metric" id="fertile-count">0</strong></article>
+        <article class="card metric-card color-count-card"><span class="secondary">Couleurs</span><strong class="metric" id="color-count">0 / 120</strong><progress id="color-progress" max="120" value="0" aria-label="Couleurs présentes"></progress></article>
+        <article class="card balance-card">
+          <h2>Équilibre</h2>
+          <div class="balance-track is-empty" id="balance-track" role="img" aria-label="0 femelles, 0 mâles"><span id="female-bar"></span><span id="male-bar"></span></div>
+          <div class="balance-values"><span>♀ <strong id="female-balance">0</strong> (<span id="female-percent">0 %</span>)</span><span>♂ <strong id="male-balance">0</strong> (<span id="male-percent">0 %</span>)</span></div>
+        </article>
+      </section>
+
+      <div class="main-grid">
+        <section class="card" id="stock">
+          <div class="section-heading">
+            <div><p class="eyebrow">Votre élevage</p><h2>Montures</h2></div>
+            <span id="stock-count" class="secondary">0 / 500</span>
+          </div>
+          <div id="empty-stock" class="empty-state" hidden>Ton élevage est vide.</div>
+          <form id="mount-form" class="mount-form">
+            <label>Couleur<select id="mount-color" required></select></label>
+            <label>Sexe<select id="mount-sex"><option>Femelle</option><option>Mâle</option></select></label>
+            <label>Niveau<input id="mount-level" type="number" min="0" max="200" value="100" required></label>
+            <button type="submit">Ajouter</button>
+          </form>
+          <ul id="mount-list" class="mount-list"></ul>
+        </section>
+
+        <section class="card" id="plan">
+          <div class="section-heading"><div><p class="eyebrow">Croisements</p><h2>Plan d’optimisation</h2></div></div>
+          <label>Couleur cible
+            <select id="target-color"></select>
+          </label>
+          <p class="secondary">Le plan suit les premières paires de parents déclarées pour chaque couleur. Il indique le stock actuel sans modifier les règles de croisement.</p>
+          <ol id="plan-steps" class="plan-steps"></ol>
+        </section>
+      </div>
+
+      <section class="card import-card" id="import">
+        <div class="section-heading"><div><p class="eyebrow">Transfert</p><h2>Import / export</h2></div></div>
+        <p class="secondary">L’import attend un fichier JSON contenant une liste de montures (couleur, sexe, niveau, fécondité facultative).</p>
+        <div class="import-actions">
+          <label class="file-button">Importer un JSON<input id="import-file" type="file" accept="application/json,.json"></label>
+          <button id="export-button" class="secondary-button" type="button">Exporter le stock</button>
+        </div>
+        <p id="import-message" class="message" role="status" hidden></p>
+      </section>
+      <footer class="footer"><a href="../types.html">Changer de type de monture</a><span id="footer-status">Enregistré</span></footer>
+    </main>
+  </body>
+</html>

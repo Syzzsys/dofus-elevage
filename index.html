@@ -1,0 +1,735 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f6f3eb">
+    <title>Élevage de dragodindes — Dofus</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js" defer></script>
+    <script src="app.js" defer></script>
+  </head>
+  <body class="is-loading">
+    <div class="app-shell">
+      <aside class="app-sidebar" id="app-sidebar" aria-label="Navigation de l’application">
+        <a class="topbar-brand" href="#panel-dashboard" aria-label="Élevage Dofus, accueil">
+        <svg class="icon brand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 20v-8"></path><path d="M7 20h10"></path><path d="M12 12c-4.5 0-7-2.3-7-6 4.7 0 7 2.2 7 6Z"></path><path d="M12 10c0-4.2 2.5-6.5 7-6.5 0 4.4-2.4 6.5-7 6.5Z"></path>
+        </svg>
+        <span><strong>Élevage</strong><small>DOFUS · GESTION</small></span>
+      </a>
+      <button id="sidebar-collapse" class="sidebar-collapse" type="button" aria-label="Replier la barre latérale" aria-expanded="true">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"></path><path d="M4 4v16"></path></svg>
+      </button>
+      <nav class="tabs sidebar-nav" aria-label="Navigation principale" role="tablist">
+        <button class="tab-button active" id="tab-dashboard" type="button" role="tab" aria-selected="true" aria-controls="panel-dashboard" data-tab="dashboard" title="Tableau de bord"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="8" height="8" rx="1"></rect><rect x="13" y="3" width="8" height="5" rx="1"></rect><rect x="13" y="10" width="8" height="11" rx="1"></rect><rect x="3" y="13" width="8" height="8" rx="1"></rect></svg><span>Tableau de bord</span></button>
+        <button class="tab-button" id="tab-elevage" type="button" role="tab" aria-selected="false" aria-controls="panel-elevage" data-tab="elevage" title="Élevage"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20v-8"></path><path d="M12 13c-4 0-6-2-6-5.5 4 0 6 2 6 5.5Z"></path><path d="M12 10c0-3.5 2-5.5 6-5.5 0 3.5-2 5.5-6 5.5Z"></path></svg><span>Élevage</span></button>
+        <button class="tab-button" id="tab-croisements" type="button" role="tab" aria-selected="false" aria-controls="panel-croisements" data-tab="croisements" title="Croisements"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="7" cy="7" r="3"></circle><circle cx="17" cy="17" r="3"></circle><path d="M9.5 9.5 14.5 14.5"></path><path d="M17 7v4"></path><path d="M15 9h4"></path></svg><span>Croisements</span></button>
+        <button class="tab-button" id="tab-bilan" type="button" role="tab" aria-selected="false" aria-controls="panel-bilan" data-tab="bilan" title="Plan"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 6h13"></path><path d="M8 12h13"></path><path d="M8 18h13"></path><path d="m3 6 1 1 2-2"></path><path d="m3 12 1 1 2-2"></path><path d="m3 18 1 1 2-2"></path></svg><span>Plan</span></button>
+        <button class="tab-button" id="tab-import" type="button" role="tab" aria-selected="false" aria-controls="panel-import" data-tab="import" title="Import"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V4"></path><path d="m7 9 5-5 5 5"></path><path d="M4 20h16"></path></svg><span>Import</span></button>
+        <button class="tab-button" id="tab-reglages" type="button" role="tab" aria-selected="false" aria-controls="panel-reglages" data-tab="reglages" title="Paramètres"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"></circle><path d="M19 13.5v-3l-2-.7a6 6 0 0 0-.7-1.6l.9-1.9-2.1-1.5-1.6 1.3a6 6 0 0 0-1.8 0L10 4.8 7.9 6.3l.9 1.9a6 6 0 0 0-.7 1.6l-2 .7v3l2 .7a6 6 0 0 0 .7 1.6l-.9 1.9 2.1 1.5 1.6-1.3a6 6 0 0 0 1.8 0l1.6 1.3 2.1-1.5-.9-1.9a6 6 0 0 0 .7-1.6Z"></path></svg><span>Paramètres</span></button>
+      </nav>
+      <div class="sidebar-footer">
+        <button id="help-open-button" class="sidebar-help" type="button"><span class="help-mark">?</span><span>Aide</span></button>
+        <span class="app-version">Élevage · v1.0</span>
+      </div>
+      </aside>
+      <div class="app-main">
+      <header class="topbar">
+        <div class="topbar-context"><span class="breadcrumb-root">Élevage</span><span aria-hidden="true">/</span><strong id="breadcrumb-current">Tableau de bord</strong></div>
+        <label class="global-search-label" for="global-search">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-4-4"></path></svg>
+          <input id="global-search" type="search" placeholder="Rechercher une monture…" aria-label="Rechercher dans l’élevage">
+          <kbd>Ctrl K</kbd>
+        </label>
+        <div class="toolbar-stats">
+        <label class="target-generation">
+          Génération visée
+          <select id="generation-target" aria-label="Génération visée"></select>
+        </label>
+        <span id="save-status" class="save-status" role="status" aria-live="polite">Enregistré</span>
+        <span id="mount-count" class="visually-hidden" aria-live="polite"></span>
+        <button id="theme-toggle" class="secondary-button theme-toggle" type="button" aria-label="Activer le thème sombre" title="Activer le thème sombre">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5a8.6 8.6 0 1 0 10.7 10.7Z"></path></svg>
+        </button>
+      </div>
+    </header>
+
+    <main class="dashboard">
+      <div id="color-load-error" class="message error" role="alert" hidden></div>
+      <div id="storage-error" class="message error" role="alert" hidden></div>
+      <div id="transfer-message" class="message" role="status" hidden></div>
+      <div id="capacity-load-error" class="message error" role="alert" hidden></div>
+      <div id="color-message" class="message" role="status" hidden></div>
+
+      <section id="panel-dashboard" class="tab-panel active dashboard-home" role="tabpanel" aria-labelledby="tab-dashboard" data-panel="dashboard">
+        <header class="page-header dashboard-page-header">
+          <div><p class="eyebrow">Vue d’ensemble</p><h1>Tableau de bord</h1><p class="section-description">Le prochain geste utile pour faire avancer ton élevage.</p></div>
+          <button class="help-trigger dashboard-info" type="button" aria-label="À propos du tableau de bord" title="Indicateurs du stock, avancement vers la génération visée et actions du plan." data-help-title="Tableau de bord" data-help-text="Retrouve ici les indicateurs de ton stock, l’avancement vers la génération visée et les actions proposées par ton plan. Les propositions viennent des données de couleurs et des montures saisies.">i</button>
+        </header>
+        <section class="recommendation-card" aria-labelledby="recommendation-title">
+          <div class="recommendation-mark" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"></path><path d="M5 8h14"></path><path d="M7 8v5a5 5 0 0 0 10 0V8"></path><path d="M5 21h14"></path></svg></div>
+          <div class="recommendation-copy"><p class="eyebrow">Prochaine étape</p><h2 id="recommendation-title">Préparation du plan…</h2></div>
+          <button id="recommendation-action" type="button">Ouvrir l’élevage</button>
+        </section>
+        <section class="dashboard-stats-grid" aria-label="Indicateurs de l’élevage">
+          <article class="dashboard-stat-card">
+            <div class="dashboard-stat-title"><span>Montures en réserve</span><span class="dashboard-info" role="img" aria-label="Montures en réserve" title="Nombre total de montures enregistrées, sur la capacité maximale.">i</span></div>
+            <div class="dashboard-stat-value"><strong id="dashboard-reserve-value">0</strong></div>
+            <progress id="dashboard-reserve-progress" max="500" value="0" aria-label="Montures enregistrées sur 500"></progress>
+            <p class="dashboard-stat-help">sur <span id="dashboard-reserve-capacity">500</span></p>
+          </article>
+          <article class="dashboard-stat-card">
+            <div class="dashboard-stat-title"><span>Couples faisables</span><span class="dashboard-info" role="img" aria-label="Couples faisables" title="Paires fécondes présentes dans ton stock et compatibles avec au moins une recette.">i</span></div>
+            <div class="dashboard-stat-value"><strong id="dashboard-couples-value">0</strong><span>couples</span></div>
+            <p class="dashboard-stat-help">dans le stock</p>
+          </article>
+          <article class="dashboard-stat-card">
+            <div class="dashboard-stat-title"><span>Répartition</span><span class="dashboard-info" role="img" aria-label="Répartition des sexes" title="Nombre de montures enregistrées par sexe et leur répartition relative.">i</span></div>
+            <div class="dashboard-sex-values"><span>Femelles <strong id="dashboard-females">0</strong></span><span>Mâles <strong id="dashboard-males">0</strong></span></div>
+            <div id="dashboard-sex-track" class="dashboard-sex-track is-empty" role="img" aria-label="Aucune monture"></div>
+            <p class="dashboard-stat-help">Femelles / mâles</p>
+          </article>
+        </section>
+        <div class="dashboard-action-grid">
+          <section class="dashboard-card" aria-labelledby="generation-progress-title">
+            <div class="section-heading"><div><p class="eyebrow">Objectif G<span id="dashboard-target-generation">3</span></p><h2 id="generation-progress-title">Progression vers la cible</h2></div></div>
+            <ol id="dashboard-generation-stepper" class="generation-stepper" aria-label="Étapes des générations"></ol>
+          </section>
+          <section class="dashboard-card" aria-labelledby="dashboard-todos-title">
+            <div class="section-heading"><div><p class="eyebrow">Selon ton plan</p><h2 id="dashboard-todos-title">À faire</h2></div><button class="tab-link-button" type="button" data-open-tab="bilan">Voir le plan</button></div>
+            <ul id="dashboard-todo-list" class="dashboard-todo-list" aria-live="polite"></ul>
+          </section>
+        </div>
+      </section>
+
+      <section id="panel-elevage" class="tab-panel active" role="tabpanel" aria-labelledby="tab-elevage" data-panel="elevage">
+        <div class="breeding-grid">
+          <section class="panel entry-panel" aria-labelledby="add-heading">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">Votre élevage</p>
+                <h1 id="add-heading">Ajuster les quantités</h1>
+                <p class="section-description">Ajoute et organise les montures de ton élevage.</p>
+              </div>
+            </div>
+
+            <div id="summary-empty-state" class="summary-empty-state" hidden>
+              <svg class="icon summary-empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20v-8"></path><path d="M12 13c-4 0-6-2-6-5.5 4 0 6 2 6 5.5Z"></path><path d="M12 10c0-4.2 2.5-6.5 7-6.5 0 4.4-2.4 6.5-7 6.5Z"></path></svg>
+              <strong>Ton élevage est vide</strong>
+              <div>
+                <button id="empty-state-add-mount" type="button">Ajouter une monture</button>
+                <button id="summary-import-capture" class="text-button summary-import-link" type="button">Importer depuis une capture</button>
+              </div>
+            </div>
+            <form id="mount-form" class="quantity-form">
+              <div class="mount-entry-row">
+                <div class="color-field">
+                  <span class="color-field-label">Couleur</span>
+                  <select id="color-select" class="visually-hidden" name="color" required tabindex="-1" aria-hidden="true">
+                    <option value="">Chargement des couleurs…</option>
+                  </select>
+                  <div id="color-select-control" class="color-select-control">
+                    <button id="color-select-trigger" class="color-select-trigger" type="button" aria-label="Choisir une couleur" aria-haspopup="listbox" aria-expanded="false" aria-controls="color-select-popover" disabled>
+                      <span id="color-select-value" class="color-select-value skeleton color-select-loading"></span>
+                      <span class="color-select-chevron" aria-hidden="true">▾</span>
+                    </button>
+                    <div id="color-select-popover" class="color-select-popover" hidden>
+                      <label class="visually-hidden" for="color-select-search">Rechercher une couleur</label>
+                      <input id="color-select-search" class="color-select-search" type="search" placeholder="Rechercher une couleur…" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="true" aria-controls="color-select-options" aria-activedescendant="">
+                      <div id="color-select-options" class="color-select-options" role="listbox" aria-label="Couleurs disponibles"></div>
+                      <p id="color-select-empty" class="color-select-empty" hidden>Aucune couleur trouvée.</p>
+                    </div>
+                  </div>
+                </div>
+                <button id="bulk-add-toggle" class="secondary-button" type="button" aria-expanded="false" aria-controls="bulk-add-form">Ajouter plusieurs montures</button>
+              </div>
+              <div id="quantity-fields" class="quantity-fields" hidden>
+                <div class="sex-quantity">
+                  <label>
+                    Nombre de femelles
+                    <input name="females" type="number" min="0" max="500" step="1" value="0" required>
+                  </label>
+                  <div id="female-capacities" class="capacity-counters" aria-label="Capacités des femelles"></div>
+                </div>
+                <div class="sex-quantity">
+                  <label>
+                    Nombre de mâles
+                    <input name="males" type="number" min="0" max="500" step="1" value="0" required>
+                  </label>
+                  <div id="male-capacities" class="capacity-counters" aria-label="Capacités des mâles"></div>
+                </div>
+                <div class="form-actions">
+                  <button id="submit-button" type="submit">Valider les quantités</button>
+                </div>
+              </div>
+            </form>
+            <div id="quantity-message" class="message error" role="alert" hidden></div>
+
+            <form id="bulk-add-form" class="bulk-add-form" hidden>
+              <label for="bulk-color">Couleur et génération
+                <select id="bulk-color" required>
+                  <option value="">Sélectionner une couleur</option>
+                </select>
+              </label>
+              <label for="bulk-sex">Sexe
+                <select id="bulk-sex">
+                  <option value="Femelle">♀ Femelle</option>
+                  <option value="Mâle">♂ Mâle</option>
+                </select>
+              </label>
+              <label for="bulk-quantity">Quantité
+                <input id="bulk-quantity" type="number" min="1" max="500" step="1" value="1" required>
+              </label>
+              <button type="submit">Ajouter</button>
+            </form>
+
+            <details id="mount-detail" class="detail-accordion mount-detail">
+              <summary>Voir le détail</summary>
+              <div class="mount-filter-toolbar" aria-label="Recherche et filtres des montures">
+                <label class="mount-search-label" for="mount-search">
+                  <span class="visually-hidden">Rechercher une monture par nom ou couleur</span>
+                  <span class="mount-search-icon" aria-hidden="true">⌕</span>
+                  <input id="mount-search" type="search" placeholder="Rechercher par nom ou couleur… ( / )" autocomplete="off" title="Raccourci clavier : /">
+                </label>
+                <button id="mount-filters-toggle" class="secondary-button mount-filters-toggle" type="button" aria-expanded="false" aria-controls="mount-filters-panel">
+                  Filtres <span id="mount-filter-count" class="filter-count" hidden>0</span>
+                </button>
+                <label class="mount-sort-control" for="mount-sort">Trier par
+                  <select id="mount-sort">
+                    <option value="generation">Génération</option>
+                    <option value="level">Niveau</option>
+                    <option value="name">Nom</option>
+                    <option value="color">Couleur</option>
+                  </select>
+                </label>
+                <button id="capture-import-button" class="secondary-button capture-import-button" type="button" title="Sélectionner plusieurs images, les déposer dans la page ou les coller avec Ctrl+V">Importer depuis une capture</button>
+              </div>
+              <div id="mount-filters-panel" class="mount-filter-panel" hidden>
+                <label for="generation-filter">Génération
+                  <select id="generation-filter">
+                    <option value="">Toutes</option>
+                  </select>
+                </label>
+                <label for="sex-filter">Sexe
+                  <select id="sex-filter">
+                    <option value="">Tous</option>
+                    <option value="Femelle">♀ Femelle</option>
+                    <option value="Mâle">♂ Mâle</option>
+                  </select>
+                </label>
+                <div class="mount-color-filter">
+                  <span class="color-field-label">Couleur</span>
+                  <select id="color-filter" class="visually-hidden" tabindex="-1" aria-hidden="true">
+                    <option value="">Toutes les couleurs</option>
+                  </select>
+                  <div id="color-filter-control" class="color-select-control">
+                    <button id="color-filter-trigger" class="color-select-trigger" type="button" aria-label="Filtrer par couleur" aria-haspopup="listbox" aria-expanded="false" aria-controls="color-filter-popover" disabled>
+                      <span id="color-filter-value" class="color-select-value skeleton color-select-loading"></span>
+                      <span class="color-select-chevron" aria-hidden="true">▾</span>
+                    </button>
+                    <div id="color-filter-popover" class="color-select-popover" hidden>
+                      <label class="visually-hidden" for="color-filter-search">Rechercher une couleur</label>
+                      <input id="color-filter-search" class="color-select-search" type="search" placeholder="Rechercher une couleur…" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="true" aria-controls="color-filter-options" aria-activedescendant="">
+                      <div id="color-filter-options" class="color-select-options" role="listbox" aria-label="Filtrer par couleur"></div>
+                      <p id="color-filter-empty" class="color-select-empty" hidden>Aucune couleur trouvée.</p>
+                    </div>
+                  </div>
+                </div>
+                <label for="capacity-filter">Capacité
+                  <select id="capacity-filter">
+                    <option value="">Toutes les capacités</option>
+                  </select>
+                </label>
+                <label class="filter-toggle" for="unnamed-filter">
+                  <span>Sans nom</span>
+                  <input id="unnamed-filter" type="checkbox" role="switch">
+                </label>
+                <label class="filter-toggle" for="mount-fertile-only">
+                  <span>Fécondes</span>
+                  <input id="mount-fertile-only" type="checkbox" role="switch">
+                </label>
+              </div>
+              <div class="active-filter-row">
+                <div id="active-mount-filters" class="active-filter-chips" aria-label="Filtres actifs" aria-live="polite"></div>
+                <button id="clear-mount-filters" class="text-button" type="button" hidden>Tout effacer</button>
+              </div>
+              <div class="table-wrap mount-table-scroll">
+                <table>
+                  <thead>
+                    <tr>
+                      <th scope="col" class="mount-sort-heading"><button type="button" data-sort="name">Monture <span aria-hidden="true">↕</span></button></th>
+                      <th scope="col" class="mount-sort-heading"><button type="button" data-sort="level">Niveau <span aria-hidden="true">↕</span></button></th>
+                      <th scope="col">Capacité</th>
+                      <th scope="col">Fécondité</th>
+                      <th scope="col">Reproductions restantes</th>
+                      <th scope="col">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="mount-list"></tbody>
+                </table>
+                <div id="empty-state" class="mount-empty-state" hidden></div>
+                <input id="capture-import-file" type="file" accept="image/*" multiple hidden>
+              </div>
+            </details>
+
+            <form id="capacity-edit-form" class="capacity-edit-form" hidden>
+              <h3>Modifier la capacité</h3>
+              <label>
+                Capacité
+                <select name="capacity" required></select>
+              </label>
+              <div class="form-actions">
+                <button type="submit">Enregistrer</button>
+                <button id="cancel-capacity-edit" class="secondary-button" type="button">Annuler</button>
+              </div>
+            </form>
+          </section>
+
+          <aside class="panel breeding-summary" aria-labelledby="summary-heading">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">En un coup d’œil</p>
+                <h2 id="summary-heading">Résumé</h2>
+              </div>
+            </div>
+            <section class="summary-capacity summary-block" aria-label="Capacité de l’élevage">
+              <div id="capacity-donut" class="capacity-donut" role="img" aria-label="0 monture sur 500">
+                <div class="capacity-donut-center">
+                  <strong id="capacity-percent">0 %</strong>
+                </div>
+              </div>
+              <div class="capacity-meta">
+                <strong id="capacity-count">0 / 500</strong>
+                <span>Montures en réserve</span>
+                <progress id="capacity-progress" max="500" value="0" aria-label="Montures enregistrées sur 500" class="visually-hidden"></progress>
+              </div>
+            </section>
+            <section class="summary-composition summary-block" aria-label="Composition de l’élevage">
+              <div class="summary-stat-grid">
+                <article class="summary-stat" title="Nombre de montures femelles enregistrées.">
+                  <div class="summary-stat-label"><span aria-hidden="true">♀</span> Femelles</div>
+                  <strong id="summary-females">0</strong>
+                </article>
+                <article class="summary-stat" title="Nombre de montures mâles enregistrées.">
+                  <div class="summary-stat-label"><span aria-hidden="true">♂</span> Mâles</div>
+                  <strong id="summary-males">0</strong>
+                </article>
+                <article class="summary-stat" title="Nombre de montures dont le statut indique « Féconde ».">
+                  <div class="summary-stat-label"><svg class="icon semantic-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"></path><circle cx="12" cy="12" r="10"></circle></svg> Fécondes</div>
+                  <strong id="summary-fertile">0</strong>
+                </article>
+                <article class="summary-stat summary-color-stat" title="Couleurs distinctes présentes dans ton stock, sur le total des couleurs de référence.">
+                  <div class="summary-color-heading">
+                    <div class="summary-stat-label"><svg class="icon semantic-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18h1.2a2 2 0 0 0 1.4-3.4 1.8 1.8 0 0 1 1.3-3.1H18a3 3 0 0 0 3-3c0-4.7-4-8.5-9-8.5Z"></path><circle cx="7.5" cy="10" r=".8"></circle><circle cx="11" cy="7" r=".8"></circle><circle cx="16" cy="8" r=".8"></circle></svg> Couleurs</div>
+                    <strong id="summary-owned-colors">0 / 66</strong>
+                  </div>
+                  <progress id="summary-colors-progress" max="66" value="0" aria-label="Couleurs présentes dans l’élevage"></progress>
+                </article>
+              </div>
+            </section>
+            <section class="summary-sex-balance summary-block" aria-labelledby="summary-balance-heading">
+              <h3 id="summary-balance-heading">Équilibre</h3>
+              <div class="summary-balance-values" aria-hidden="true">
+                <span>♀ <strong id="summary-balance-female-value">0</strong> (<span id="summary-balance-female-percent">0 %</span>)</span>
+                <span>♂ <strong id="summary-balance-male-value">0</strong> (<span id="summary-balance-male-percent">0 %</span>)</span>
+              </div>
+              <div id="summary-balance-track" class="summary-balance-track" role="img" aria-label="0 femelle(s), 0 mâle(s)">
+                <span id="summary-balance-females"></span><span id="summary-balance-males"></span>
+              </div>
+            </section>
+            <button id="summary-absent-open" class="summary-absent-open secondary-button" type="button">
+              <span>Voir les 66 couleurs manquantes</span>
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"></path><path d="m13 6 6 6-6 6"></path></svg>
+            </button>
+          </aside>
+        </div>
+      </section>
+
+      <section id="panel-croisements" class="tab-panel" role="tabpanel" aria-labelledby="tab-croisements" data-panel="croisements" hidden>
+        <section class="panel">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Reproduction</p>
+              <h1>Croisements</h1>
+              <p class="section-description">Compare les couples disponibles et leur chance de réussite.</p>
+            </div>
+          </div>
+          <p>Les montures fécondes peuvent s’accoupler avec une monture féconde du même type.</p>
+          <div class="crossing-rule">
+            <h2>Probabilité de génération cible</h2>
+            <p>P(génération cible) = min(100 %, 30 % + 0,15 % × (niveau de la femelle + niveau du mâle) + 20 % si Optimakina).</p>
+            <p>Le reste correspond à la génération des parents, avec une répartition 50/50 entre le père et la mère.</p>
+          </div>
+          <section class="crossing-capture-estimate" aria-labelledby="crossing-capture-estimate-heading">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">Estimation moyenne</p>
+                <h2 id="crossing-capture-estimate-heading">Captures nécessaires pour atteindre la génération cible</h2>
+              </div>
+            </div>
+            <label class="crossing-average-level-label" for="crossing-average-parent-level">
+              Niveau moyen des parents
+              <input id="crossing-average-parent-level" type="number" min="1" max="200" step="1" value="100" required>
+              <small>Ce niveau est appliqué aux deux parents à chaque étape.</small>
+            </label>
+            <div class="crossing-capture-results" aria-live="polite">
+              <article class="crossing-capture-result">
+                <h3>Sans Optimakina</h3>
+                <p>Taux de réussite par étape : <strong id="crossing-capture-rate-without">—</strong></p>
+                <p><strong id="crossing-captures-without">—</strong> captures de G1 nécessaires</p>
+              </article>
+              <article class="crossing-capture-result">
+                <h3>Avec Optimakina</h3>
+                <p>Taux de réussite par étape : <strong id="crossing-capture-rate-with">—</strong></p>
+                <p><strong id="crossing-captures-with">—</strong> captures de G1 nécessaires</p>
+              </article>
+            </div>
+            <p class="crossing-captures-saved">Captures G1 économisées avec Optimakina : <strong id="crossing-captures-saved">—</strong></p>
+            <p id="crossing-capture-validation" class="field-hint" role="status" aria-live="polite" hidden></p>
+            <p class="muted-note">L’estimation remonte chaque génération avec 2 × (1 ÷ taux de réussite), puis arrondit le total de captures à l’entier supérieur. Elle ne tient compte que du nombre de montures, pas des couleurs.</p>
+          </section>
+          <section class="crossing-calculator" aria-labelledby="crossing-calculator-heading">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">Selon tes montures saisies</p>
+                <h2 id="crossing-calculator-heading">Meilleurs couples pour G<span id="crossing-generation">3</span></h2>
+              </div>
+            </div>
+            <div class="crossing-target-controls">
+              <label class="crossing-threshold-label" for="crossing-threshold">
+                Taux de réussite visé
+                <span><input id="crossing-threshold" type="range" min="30" max="100" step="1" value="50"><output id="crossing-threshold-value" for="crossing-threshold">50%</output></span>
+              </label>
+              <label class="optimakina-toggle" for="optimakina-toggle">
+                <input id="optimakina-toggle" type="checkbox">
+                <span>Utiliser une Optimakina (+20 %)</span>
+              </label>
+            </div>
+            <p id="crossing-required-sum" class="crossing-required-sum" aria-live="polite">Somme de niveaux requise : 134 (ex. 67 + 67).</p>
+            <p id="crossing-weakest-level" class="crossing-weakest-level" aria-live="polite">Pour deux parents de même niveau : 67 chacun.</p>
+            <label class="crossing-sort-label" for="crossing-sort">
+              Trier les couples
+              <select id="crossing-sort">
+                <option value="probability">Taux décroissant</option>
+                <option value="closest">Plus proche du seuil</option>
+              </select>
+            </label>
+            <label class="crossing-status-filter-label" for="crossing-status-filter">
+              Filtrer par statut
+              <select id="crossing-status-filter">
+                <option value="">Tous les statuts</option>
+                <option value="Prêt">Prêt</option>
+                <option value="Presque">Presque</option>
+                <option value="À monter">À monter</option>
+                <option value="Niveau manquant">Niveau manquant</option>
+              </select>
+            </label>
+            <label class="fertile-crossing-filter" for="crossing-fertile-only">
+              <input id="crossing-fertile-only" type="checkbox">
+              Fécondes uniquement (croisements et résultats possibles)
+            </label>
+            <p id="crossing-result-summary" class="muted-note" aria-live="polite"></p>
+            <ol id="crossing-results" class="crossing-results" aria-label="Classement des couples compatibles"></ol>
+            <p class="muted-note">Les couleurs attendues proviennent des parents déclarés dans data/couleurs.json ; la probabilité affichée concerne la génération, pas une couleur précise.</p>
+          </section>
+        </section>
+      </section>
+
+      <section id="panel-bilan" class="tab-panel" role="tabpanel" aria-labelledby="tab-bilan" data-panel="bilan" hidden>
+        <section class="panel">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Objectif et recommandations</p>
+              <h1>Plan d’optimisation</h1>
+              <p class="section-description">Consulte les besoins calculés pour la génération visée et suis les prochaines actions.</p>
+            </div>
+          </div>
+          <div class="overview-grid compact-overview">
+            <section class="overview-stats-grid" aria-label="Statistiques de l’élevage">
+              <article class="overview-stat-card">
+                <div class="overview-stat-value"><strong id="overview-capacity-count">0</strong><span> / <span id="overview-capacity-limit">500</span></span></div>
+                <progress id="overview-capacity-progress" max="500" value="0" aria-label="Montures enregistrées sur 500"></progress>
+                <span class="overview-stat-label">Montures en réserve</span>
+                <span class="overview-stat-caption">Montures enregistrées sur la capacité maximale de 500.</span>
+              </article>
+              <article class="overview-stat-card">
+                <div class="overview-stat-value"><strong id="overview-couple-count">0</strong></div>
+                <span class="overview-stat-label">Couples faisables maintenant</span>
+                <span class="overview-stat-caption">Paires fécondes compatibles avec la génération visée.</span>
+              </article>
+              <article class="overview-stat-card overview-sex-stat">
+                <h2>Répartition ♀ / ♂</h2>
+                <dl id="balance-sex-counts" class="sex-counts"></dl>
+                <div id="balance-sex-progress" class="sex-balance-track" role="img" aria-label="Répartition entre femelles et mâles"></div>
+                <span class="overview-stat-caption">Parts des montures enregistrées dont le sexe est connu.</span>
+              </article>
+            </section>
+            <details class="overview-capabilities">
+              <summary>Voir les capacités de l’élevage</summary>
+              <div class="overview-capabilities-content">
+                <div class="capabilities-generation-row">
+                  <span class="capabilities-label">Générations accessibles</span>
+                  <div id="overview-generations" class="generation-status-list" aria-label="Générations accessibles"></div>
+                </div>
+                <div class="capability-ready">
+                  <span class="capabilities-label">Montures au niveau requis</span>
+                  <strong id="overview-level-ready">0 monture(s)</strong>
+                  <small class="capability-ready-help">Niveau minimal estimé pour atteindre le taux de réussite sélectionné, sans vérifier la fécondité.</small>
+                </div>
+              </div>
+            </details>
+            <section class="overview-block overview-colors" aria-labelledby="balance-colors-heading">
+              <div class="overview-card-heading">
+                <div>
+                  <h2 id="balance-colors-heading">Montures par couleur</h2>
+                  <p id="balance-color-summary" class="balance-color-summary" aria-live="polite"></p>
+                </div>
+                <label class="balance-absent-toggle" for="balance-show-absent">
+                  <span>Afficher les couleurs absentes</span>
+                  <input id="balance-show-absent" type="checkbox" role="switch" aria-pressed="false">
+                </label>
+              </div>
+              <div class="balance-color-toolbar">
+                <label for="balance-color-search">Rechercher une couleur
+                  <input id="balance-color-search" type="search" placeholder="Nom de couleur…" autocomplete="off">
+                </label>
+                <label for="balance-color-sort">Trier
+                  <select id="balance-color-sort">
+                    <option value="quantity">Plus nombreuses</option>
+                    <option value="generation">Génération</option>
+                    <option value="alphabetical">Alphabétique</option>
+                  </select>
+                </label>
+              </div>
+              <div id="balance-color-grid" class="balance-color-generations"></div>
+              <div id="overview-empty-state" class="overview-empty-state" hidden>
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20v-8"></path><path d="M7 20h10"></path><path d="M12 12c-4.5 0-7-2.3-7-6 4.7 0 7 2.2 7 6Z"></path><path d="M12 10c0-4.2 2.5-6.5 7-6.5 0 4.4-2.4 6.5-7 6.5Z"></path></svg>
+                <div><strong>Aucune monture en stock</strong><span>Ajoute tes montures ou importe une capture.</span></div>
+                <div class="overview-empty-actions">
+                  <button id="overview-add-mount" class="secondary-button" type="button">Ajouter une monture</button>
+                  <button id="overview-import-capture" class="text-button" type="button">Importer depuis une capture</button>
+                </div>
+              </div>
+            </section>
+          </div>
+          <section class="obtainable-crossings" aria-labelledby="obtainable-heading">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">Avec ton stock</p>
+                <h2 id="obtainable-heading">Ce que je peux obtenir</h2>
+              </div>
+            </div>
+            <p id="obtainable-summary" class="muted-note" aria-live="polite"></p>
+            <label class="obtainable-feasible-filter" for="obtainable-feasible-only">
+              <span>Faisables uniquement</span>
+              <input id="obtainable-feasible-only" type="checkbox" role="switch">
+            </label>
+            <div id="obtainable-generation-tabs" class="obtainable-generation-tabs" role="tablist" aria-label="Génération à obtenir"></div>
+            <ul id="obtainable-crossings-list" class="obtainable-crossings-list"></ul>
+          </section>
+          <section class="optimization-plan" aria-labelledby="plan-heading">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">Étapes et recommandations</p>
+                <h2 id="plan-heading">Plan d’optimisation</h2>
+              </div>
+            </div>
+            <div id="plan-error" class="message error" role="alert" hidden></div>
+            <div class="plan-target-summary">
+              <div class="plan-key-metrics" aria-label="Indicateurs de l’objectif">
+                <div><span>Objectif</span><strong id="plan-target-generation-value">G3</strong></div>
+                <div><span>Couleurs ciblées</span><strong id="plan-target-color-count">0</strong></div>
+                <div><span>Montures à capturer</span><strong id="plan-target-capture-count">0</strong></div>
+              </div>
+              <section class="plan-next-action" aria-labelledby="plan-next-action-heading">
+                <h3 id="plan-next-action-heading">Prochaine action</h3>
+                <p id="plan-next-action" aria-live="polite">Calcul en cours…</p>
+              </section>
+              <div id="plan-status-message" class="plan-status-message" aria-live="polite"></div>
+              <div id="plan-generation-timeline" class="plan-generation-timeline" aria-label="Étapes de génération"></div>
+            </div>
+            <details class="plan-section">
+              <summary>Équilibre des couleurs utiles</summary>
+              <p class="balance-legend">Stock = montures que tu possèdes. Besoin = nombre minimum à garder pour la suite.</p>
+              <p id="plan-balance-summary" class="balance-summary" aria-live="polite"></p>
+              <div id="plan-balance-filters" class="balance-filters" role="group" aria-label="Filtrer les couleurs par équilibre">
+                <button class="balance-filter active" type="button" data-balance-filter="all" aria-pressed="true">Tout</button>
+                <button class="balance-filter" type="button" data-balance-filter="capture" aria-pressed="false">À capturer</button>
+                <button class="balance-filter" type="button" data-balance-filter="cross" aria-pressed="false">À croiser</button>
+                <button class="balance-filter" type="button" data-balance-filter="surplus" aria-pressed="false">En surplus</button>
+                <button class="balance-filter" type="button" data-balance-filter="balanced" aria-pressed="false">Parfait</button>
+              </div>
+              <div class="plan-all-actions-control">
+                <button id="plan-actions-toggle" class="secondary-button compact-button" type="button" aria-expanded="false" aria-controls="plan-all-actions">Liste d’actions</button>
+                <ul id="plan-all-actions" class="plan-action-list plan-all-actions" hidden></ul>
+              </div>
+              <div class="table-wrap">
+                <table class="plan-table balance-table">
+                  <thead>
+                    <tr><th scope="col">Couleur</th><th scope="col">Gén.</th><th scope="col">Femelles</th><th scope="col">Mâles</th><th scope="col">Fécondes</th><th scope="col">Action à faire</th></tr>
+                  </thead>
+                  <tbody id="plan-balance"></tbody>
+                </table>
+              </div>
+            </details>
+            <div class="plan-actions-grid">
+              <details class="plan-action-group">
+                <summary>1 · À capturer</summary>
+                <ul id="plan-capture-actions" class="plan-action-list"></ul>
+              </details>
+              <details class="plan-action-group">
+                <summary>2 · À croiser</summary>
+                <ul id="plan-cross-actions" class="plan-action-list"></ul>
+              </details>
+              <details class="plan-action-group">
+                <summary>3 · À cloner / extraire</summary>
+                <p id="plan-clone-extract-note" class="muted-note"></p>
+                <ul id="plan-clone-actions" class="plan-action-list"></ul>
+              </details>
+              <details class="plan-action-group">
+                <summary>4 · À sortir de l’élevage</summary>
+                <ul id="plan-release-actions" class="plan-action-list"></ul>
+              </details>
+            </div>
+          </section>
+          <details class="detail-accordion">
+            <summary>Comprendre le bilan</summary>
+            <p>Le plan utilise les couleurs et leurs croisements définis dans les fichiers de données. Les probabilités de génération ne déterminent pas la probabilité d’obtenir une couleur précise.</p>
+          </details>
+        </section>
+      </section>
+
+      <section id="panel-import" class="tab-panel" role="tabpanel" aria-labelledby="tab-import" data-panel="import" hidden>
+        <section class="panel import-panel">
+          <div class="section-heading"><div><p class="eyebrow">Données de ton élevage</p><h1>Importer et exporter</h1><p class="section-description">Garde une copie JSON de tes montures ou restaure une sauvegarde précédente.</p></div></div>
+          <div class="import-actions-grid">
+            <article class="dashboard-card"><h2>Sauvegarde JSON</h2><p>Le fichier contient les montures et leurs informations de suivi. Il reste sur ton appareil.</p><div class="settings-actions"><button id="nav-import-button" class="secondary-button" type="button">Importer un élevage JSON</button><button id="export-button" type="button">Exporter l’élevage</button></div></article>
+            <article class="dashboard-card"><h2>Capture d’écran</h2><p>Lis une ou plusieurs captures localement, vérifie les champs détectés, puis confirme l’import.</p><button id="import-capture-dashboard" type="button">Importer depuis une capture</button></article>
+          </div>
+        </section>
+      </section>
+
+      <section id="panel-reglages" class="tab-panel" role="tabpanel" aria-labelledby="tab-reglages" data-panel="reglages" hidden>
+        <section class="panel settings-grid">
+          <div class="section-heading settings-heading">
+            <div>
+              <p class="eyebrow">Préférences et données</p>
+              <h1>Paramètres</h1>
+              <p class="section-description">Ajuste les objectifs et gère les données de ton élevage.</p>
+            </div>
+          </div>
+          <section class="settings-section">
+            <h2>Apparence et langue</h2>
+            <p>Le thème peut être adapté à ta préférence. L’interface est actuellement disponible en français.</p>
+            <div class="settings-actions"><button id="settings-theme-toggle" class="secondary-button" type="button">Changer le thème clair / sombre</button><label class="language-setting">Langue<select aria-label="Langue de l’interface" disabled><option>Français</option></select></label></div>
+          </section>
+          <details class="settings-section detail-accordion">
+            <summary>Import et export</summary>
+            <div class="settings-actions">
+              <button id="import-button" class="secondary-button" type="button">Importer JSON</button>
+              <button id="settings-export-button" class="secondary-button" type="button">Exporter JSON</button>
+              <input id="import-file" class="visually-hidden" type="file" accept="application/json,.json">
+            </div>
+          </details>
+          <details class="settings-section detail-accordion">
+            <summary>Légende des capacités</summary>
+            <ul id="capacity-legend" class="capacity-legend"></ul>
+            <p>Pour donner une capacité à une dragodinde, il faut lui donner une potion makina qui dépend du type de monture et de sa génération (cf. métier Éleveur).</p>
+          </details>
+          <details class="settings-section detail-accordion">
+            <summary>Réinitialisation</summary>
+            <p>Supprime toutes les montures enregistrées dans ce navigateur.</p>
+            <button id="reset-button" class="danger-button" type="button">Réinitialiser l’élevage</button>
+          </details>
+          <section class="settings-section" aria-labelledby="plan-target-settings-heading">
+            <h2 id="plan-target-settings-heading">Marge de sécurité</h2>
+            <form id="plan-settings-form" class="plan-settings-form">
+              <label>
+                Montures supplémentaires par sexe et par couleur utile
+                <input id="safety-margin" type="number" min="0" max="500" step="1" value="0" required>
+              </label>
+              <button type="submit">Enregistrer la marge</button>
+            </form>
+          </section>
+        </section>
+      </section>
+    </main>
+    <footer class="app-footer"><span>Élevage de dragodindes · v1.0</span><button id="footer-help-button" class="text-button" type="button">Centre d’aide</button><span id="save-status-footer" aria-live="polite">Enregistré</span></footer>
+    <aside id="help-drawer" class="help-drawer" role="dialog" aria-modal="false" aria-labelledby="help-drawer-title" hidden>
+      <div class="help-drawer-header"><div><p class="eyebrow">Centre d’aide</p><h2 id="help-drawer-title">Aide</h2></div><button id="help-close-button" class="secondary-button icon-action" type="button" aria-label="Fermer l’aide">×</button></div>
+      <p id="help-drawer-content">Les données de l’élevage sont sauvegardées dans le navigateur. Exporte régulièrement un fichier JSON pour conserver une copie indépendante.</p>
+      <button id="help-drawer-action" class="text-button" type="button" hidden>Ouvrir la section associée</button>
+    </aside>
+    </div>
+    </div>
+    <dialog id="onboarding-dialog" class="onboarding-dialog" aria-labelledby="onboarding-title">
+      <form method="dialog" class="onboarding-close"><button id="onboarding-skip" class="text-button" type="submit">Passer l’introduction</button></form>
+      <div class="onboarding-content">
+        <p class="eyebrow">Première visite · étape <span id="onboarding-step-number">1</span> sur 3</p>
+        <div class="onboarding-progress" aria-hidden="true"><span id="onboarding-progress-fill"></span></div>
+        <h2 id="onboarding-title">Choisis ta génération cible</h2>
+        <p id="onboarding-description">Tu peux modifier cet objectif à tout moment depuis la barre supérieure.</p>
+        <div class="onboarding-actions"><button id="onboarding-back" class="secondary-button" type="button" hidden>Retour</button><button id="onboarding-next" type="button">Continuer</button></div>
+      </div>
+    </dialog>
+    <dialog id="summary-missing-colors-dialog" class="summary-missing-colors-dialog" aria-labelledby="summary-missing-colors-title">
+      <div class="summary-missing-colors-header">
+        <div>
+          <p class="eyebrow">Résumé de l’élevage</p>
+          <h2 id="summary-missing-colors-title">Couleurs manquantes <span id="summary-absent-count">66</span></h2>
+        </div>
+        <button id="summary-missing-colors-close" class="secondary-button icon-action" type="button" aria-label="Fermer les couleurs manquantes">×</button>
+      </div>
+      <label class="summary-absent-filter" for="summary-absent-search">
+        Filtrer les couleurs
+        <input id="summary-absent-search" type="search" placeholder="Filtrer une couleur…" autocomplete="off">
+        <span id="summary-absent-filter-count" aria-live="polite">66 sur 66</span>
+      </label>
+      <div id="summary-absent-colors" class="summary-missing-color-grid"></div>
+    </dialog>
+    <dialog id="capture-review-dialog" class="capture-review-dialog" aria-labelledby="capture-review-title">
+      <form method="dialog" class="capture-review-close">
+        <button class="secondary-button icon-action" type="submit" aria-label="Fermer la vérification" title="Fermer">×</button>
+      </form>
+      <div class="capture-review-content">
+        <p class="eyebrow">Reconnaissance locale</p>
+        <h2 id="capture-review-title">Vérifier les montures détectées</h2>
+        <p class="muted-note">Les captures restent dans ton navigateur. Aucune monture n’est enregistrée avant de choisir « Importer la sélection ».</p>
+        <div id="capture-progress" class="capture-progress" role="status" aria-live="polite" hidden>
+          <p id="capture-progress-message"></p>
+          <progress id="capture-progress-bar" max="100" value="0"></progress>
+        </div>
+        <div id="capture-error" class="message error" role="alert" hidden></div>
+        <p class="capture-confidence-legend"><span class="capture-confidence-low"><svg class="icon semantic-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 9v4"></path><path d="M12 17h.01"></path><path d="m10.3 3.9-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.7-3.1l-8-14a2 2 0 0 0-3.4 0Z"></path></svg> Confiance faible</span> · <span class="capture-confidence-missing">Champ non détecté</span></p>
+        <div class="capture-review-layout">
+          <div class="table-wrap capture-table-wrap">
+            <table class="capture-review-table">
+              <thead>
+                <tr>
+                  <th scope="col">Inclure</th><th scope="col">Nom</th><th scope="col">Couleur</th>
+                  <th scope="col">Sexe</th><th scope="col">Niveau</th><th scope="col">Capacité</th>
+                  <th scope="col">Fécondité</th><th scope="col">Reproductions restantes</th>
+                </tr>
+              </thead>
+              <tbody id="capture-review-rows"></tbody>
+            </table>
+            <p id="capture-no-results" class="capture-no-results" hidden>Aucune monture détectée. Essaie une capture plus nette ou ajoute-la manuellement.</p>
+          </div>
+          <aside class="capture-preview-panel" aria-label="Aperçu de la capture">
+            <h3>Aperçu</h3>
+            <p id="capture-preview-name" class="muted-note"></p>
+            <img id="capture-preview-image" alt="Aperçu de la capture sélectionnée" hidden>
+          </aside>
+        </div>
+        <div class="capture-review-actions">
+          <button id="capture-import-selected" type="button" disabled>Importer la sélection</button>
+          <button id="capture-review-cancel" class="secondary-button" type="button">Annuler</button>
+        </div>
+      </div>
+    </dialog>
+  </body>
+</html>

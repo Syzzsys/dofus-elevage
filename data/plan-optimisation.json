@@ -1,0 +1,21 @@
+{
+  "defaultTargetGeneration": 3,
+  "defaultSafetyMargin": 0,
+  "capacity": {
+    "maxMounts": 500
+  },
+  "crossing": {
+    "baseProbabilityPercent": 30,
+    "percentPerParentLevel": 0.15,
+    "assumeMaxGauges": true,
+    "requiresFecundParents": true,
+    "reproducteurExtraBabies": 1,
+    "reproducteurAppliesOnce": true
+  },
+  "eligibility": {
+    "cloneRequiresKnownEligibility": true,
+    "extractRequiresSterile": true,
+    "excludeSenileFromClone": true,
+    "recommendCloneOrExtractWhenEligibilityUnknown": false
+  }
+}
